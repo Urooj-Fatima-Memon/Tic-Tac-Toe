@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            background: linear-gradient(45deg, #E040FB, #448AFF);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .game-container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 5px solid #448AFF;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #2196F3;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-gap: 10px;
+            margin-top: 20px;
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            cursor: pointer;
+            background: linear-gradient(45deg, #FF5722, #FFC107);
+            color: #fff;
+            border: 2px solid #FF5722;
+            border-radius: 10px;
+            transition: background 0.3s ease-in-out;
+        }
+
+        .cell:hover {
+            background: linear-gradient(45deg, #FFC107, #FF5722);
+        }
+
+        .cell.X {
+            background: linear-gradient(45deg, #FF5722, #FFC107);
+        }
+
+        .cell.O {
+            background: linear-gradient(45deg, #2196F3, #448AFF);
+        }
+
+        #message {
+            margin-top: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        button {
+            background: linear-gradient(45deg, #4CAF50, #8BC34A);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Tic-Tac-Toe</h1>
+        <div class="board">
+            <div class="cell" onclick="makeMove(0)"></div>
+            <div class="cell" onclick="makeMove(1)"></div>
+            <div class="cell" onclick="makeMove(2)"></div>
+            <div class="cell" onclick="makeMove(3)"></div>
+            <div class="cell" onclick="makeMove(4)"></div>
+            <div class="cell" onclick="makeMove(5)"></div>
+            <div class="cell" onclick="makeMove(6)"></div>
+            <div class="cell" onclick="makeMove(7)"></div>
+            <div class="cell" onclick="makeMove(8)"></div>
+        </div>
+        <div id="message"></div>
+        <button onclick="resetGame()">Reset</button>
+    </div>
+    <script>
+        let currentPlayer = 'X';
+        let gameBoard = ['', '', '', '', '', '', '', '', ''];
+        let gameActive = true;
+
+        function makeMove(cellIndex) {
+            if (gameBoard[cellIndex] === '' && gameActive) {
+                gameBoard[cellIndex] = currentPlayer;
+                const cell = document.getElementsByClassName('cell')[cellIndex];
+                cell.textContent = currentPlayer;
+                cell.classList.add(currentPlayer);
+
+                if (checkWin(currentPlayer)) {
+                    document.getElementById('message').textContent = `${currentPlayer} wins!`;
+                    gameActive = false;
+                } else if (!gameBoard.includes('')) {
+                    document.getElementById('message').textContent = "It's a draw!";
+                    gameActive = false;
+                } else {
+                    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                }
+            }
+        }
+
+        function resetGame() {
+            gameBoard = ['', '', '', '', '', '', '', '', ''];
+            gameActive = true;
+            currentPlayer = 'X';
+            document.getElementById('message').textContent = '';
+            const cells = document.getElementsByClassName('cell');
+            for (const cell of cells) {
+                cell.textContent = '';
+                cell.classList.remove('X', 'O');
+            }
+        }
+
+        function checkWin(player) {
+            const winConditions = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8],
+                [0, 3, 6], [1, 4, 7], [2, 5, 8],
+                [0, 4, 8], [2, 4, 6]
+            ];
+
+            for (const condition of winConditions) {
+                const [a, b, c] = condition;
+                if (gameBoard[a] === player && gameBoard[b] === player && gameBoard[c] === player) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    </script>
+</body>
+</html>
+
